@@ -1,0 +1,104 @@
+create table employees(
+employee_id number,first_name varchar2(20),last_name varchar2(25) not null,email varchar2(25) unique,phone_number varchar2(20),
+hire_date date not null,job_id varchar2(10) not null,salary number(10,2),commission_pct number(8,2),department_id number,
+constraint emp_pk primary key(employee_id));
+alter table employees add manager_id number;
+
+insert into employees(employee_id,first_name,last_name,email,phone_number,hire_date,
+job_id,salary,manager_id,department_id) values(103,'Alexander','AHUNOLD','A','590.423.4567',
+'01-MAR-90','IT_PROG',9000,102,60);
+
+insert into employees(employee_id,first_name,last_name,email,phone_number,hire_date,
+job_id,salary,manager_id,department_id) values(104,'Bruce','Ernst','BERNST','590.423.4568',
+'05-JUN-21','IT_PROG',6000,103,60);
+
+insert into employees(employee_id,first_name,last_name,email,phone_number,hire_date,
+job_id,salary,manager_id,department_id) values(141,'Trenna','Rajs','TRAJS','650.121.8009',
+'17-OCT-95','ST_CLERK',3500,124,50);
+insert into employees(employee_id,first_name,last_name,email,phone_number,hire_date,
+job_id,salary,manager_id,department_id) values(142,'Curtis','Davies','CDAVIES','650.121.2994',
+'29-JAN-99','ST_CLERK',3100,124,50);
+
+-- IF ELSE
+declare
+v_ename employees.first_name%type;
+v_sal employees.salary%type;
+v_avgsal employees.salary%type;
+v_deptno employees.department_id%type;
+v_empid employees.employee_id%type:=&v_empid;
+begin
+select first_name,salary,department_id into v_ename,v_sal,v_deptno from
+employees where employee_id=v_empid;
+select avg(salary) into v_avgsal from employees where department_id=v_deptno;
+dbms_output.put_line('Salary' || v_sal);
+dbms_output.put_line('Average salary' || v_avgsal);
+if v_sal > v_avgsal then
+dbms_output.put_line(v_ename || ' salary is greater than average salary');
+else
+dbms_output.put_line(v_ename || ' salary is not greater than average salary');
+end if;
+end;
+
+
+-- If  ELSIF
+
+DECLARE
+D VARCHAR2(3):=TO_CHAR(SYSDATE,'DY');
+BEGIN
+IF D='SAT' THEN
+  DBMS_OUTPUT.PUT_LINE('ENJOY YOUR WEEKEND');
+ELSIF D='SUN' THEN
+ DBMS_OUTPUT.PUT_LINE('ENJOY YOUR WEEKEND');
+ELSE
+ DBMS_OUTPUT.PUT_LINE('HAVE A NICE DAY');
+END IF;
+END;
+
+DECLARE
+    GRADE CHAR:=upper('&grade');
+     RESULT VARCHAR2(20); 
+BEGIN
+RESULT:=
+     CASE GRADE
+   WHEN 'A' THEN 'Excellent'
+   WHEN 'B' THEN 'Very Good'
+   WHEN 'C' THEN 'Good'
+   WHEN 'D' THEN 'Fair'
+   WHEN 'E' THEN 'Poor'
+   ELSE 'No such grade'
+END ;
+DBMS_OUTPUT.PUT_LINE('Grade id :'||RESULT);
+END;
+
+DECLARE
+    GRADE CHAR:=upper('&grade'); 
+BEGIN
+CASE GRADE
+   WHEN 'A' THEN dbms_output.put_line('Excellent');
+   WHEN 'B' THEN dbms_output.put_line('Very Good');
+   WHEN 'C' THEN dbms_output.put_line('Good');
+   WHEN 'D' THEN dbms_output.put_line('Fair');
+   WHEN 'E' THEN dbms_output.put_line('Poor');
+   ELSE dbms_output.put_line('No such grade');
+END CASE;
+END;
+
+-- nested loop
+-- Nested Loop
+DECLARE
+N NUMBER:=1;
+BEGIN
+<<LABEL1>>
+LOOP
+    <<LABEL2>>
+	 LOOP
+        EXIT WHEN N>5;
+	    DBMS_OUTPUT.PUT_LINE('INNER LOOP '|| N);
+	    N:=N+1;
+	END LOOP LABEL2;
+DBMS_OUTPUT.PUT_LINE('OUTER LOOP '|| N);
+N:=N+1;
+EXIT WHEN N>10;
+END LOOP LABEL1;
+END;
+
