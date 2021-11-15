@@ -1,0 +1,65 @@
+Ex:1
+DECLARE
+N NUMBER;
+BEGIN
+N:=10/0;
+DBMS_OUTPUT.PUT_LINE(N);
+EXCEPTION
+WHEN ZERO_DIVIDE THEN
+DBMS_OUTPUT.PUT_LINE('CANNOT DIVIDE BY ZERO');
+END;
+
+Ex:2
+DECLARE
+   v_fname VARCHAR2(20);
+   v_salary NUMBER;
+BEGIN
+   SELECT first_name,salary INTO v_fname,v_salary
+   FROM employees where department_id= 10;
+EXCEPTION
+   WHEN TOO_MANY_ROWS THEN
+     DBMS_OUTPUT.PUT_LINE ('Use Oracle Bulk Collect feature or Cursor to select multiple rows from a table');
+END;
+
+Ex:3
+DECLARE
+    v_fname varchar2(30):='&v_fname';
+     v_salary    employees.salary%TYPE;
+ BEGIN 
+    SELECT  salary INTO  v_salary from employees WHERE first_name = v_fname;
+
+     DBMS_OUTPUT.PUT_LINE('SALARY :' || v_salary);
+
+EXCEPTION
+     WHEN TOO_MANY_ROWS THEN
+      DBMS_OUTPUT.PUT_LINE ('Use Oracle bulk feature to 
+
+procees the rows');
+    WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE ('Employee does not exist  with 
+
+the given name');
+      WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE ('Check the values you 
+
+entered');
+END;
+
+Ex:4
+DECLARE
+  invalid_department EXCEPTION;
+  dname VARCHAR2(20):='&dname';
+  deptid NUMBER :=&deptid;
+BEGIN
+  UPDATE  department SET deptname= dname
+  WHERE  deptno = deptid;
+  IF SQL%NOTFOUND THEN
+  RAISE invalid_department;
+  --IF SQL%NOTFOUND THEN  
+--RAISE_APPLICATION_ERROR(-20202,'This is not a valid department');
+  END IF;
+EXCEPTION
+WHEN invalid_department  THEN
+RAISE_APPLICATION_ERROR(-20202,'This is not a valid department');
+   --DBMS_OUTPUT.PUT_LINE('No such department id.');
+END;
