@@ -1,0 +1,43 @@
+CREATE OR REPLACE TRIGGER trigger1
+After update on employees
+begin
+dbms_output.put_line('after Statement level trigger fired');
+end;
+
+CREATE OR REPLACE TRIGGER trigger2
+After update on employees for each row
+begin
+dbms_output.put_line('after Row level trigger fired');
+end;
+
+CREATE OR REPLACE TRIGGER trigger3
+before update on employees
+begin
+dbms_output.put_line('before Statement level trigger fired');
+end;
+
+CREATE OR REPLACE TRIGGER trigger4
+before update on employees for each row
+begin
+dbms_output.put_line('before row level trigger fired');
+end;
+
+create table employees(employee_id number(8),first_name varchar2(30),salary number(9,2));
+insert into employees values(1003,'C',35000);
+select * from employees;
+
+update employees set salary =salary+5000;
+
+CREATE TABLE product (product_id number(5), product_name varchar2(32), unit_price number(7,2) );
+insert into product values(1,'ABC',4500);
+CREATE TABLE product_price_history (product_id number(5),unit_price number(7,2),cdate date); 
+
+CREATE or REPLACE TRIGGER price_history_trigger BEFORE UPDATE OF unit_price ON product FOR EACH ROW 
+BEGIN 
+INSERT INTO product_price_history VALUES (:old.product_id,:old.unit_price,sysdate); 
+END;
+
+select * from product_price_history;
+select * from product;
+
+update product set unit_price=unit_price+100 where product_id=1;
