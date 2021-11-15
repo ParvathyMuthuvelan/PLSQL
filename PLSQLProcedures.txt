@@ -1,0 +1,86 @@
+-- procedure without parameters
+create or replace procedure testprocedure
+as
+begin
+dbms_output.put_line('procedure called');
+end;
+
+-- to execute procedure
+execute testprocedure;
+execute procedurename;-to call the procedure
+
+-- to call from anonymous block
+begin
+testprocedure;
+end;
+
+--in-
+-- out-
+-- in/out-
+
+-- procedure with parameters
+create or replace procedure addProc(n1 in number,n2 in number,total out number,average out number) is
+begin
+total:=n1+n2;
+average:=total/2;
+end;
+
+variable tot number;
+variable avg number;
+execute addProc(10,20,:tot,:avg)
+print tot
+print avg
+
+declare
+res number;
+res1 number;
+begin
+addProc(15,10,res,res1);
+dbms_output.put_line('Total'||res);
+dbms_output.put_line('Average'||res1);
+end;
+
+create or replace procedure addDept(deptno in number,deptname in varchar2) is
+begin
+insert into department values(deptno,deptname);
+end;
+
+execute addDept(10,'Admin');
+execute addDept(20,'Purchase');
+
+begin
+addDept(30,'Sales');
+end;
+
+create or replace procedure fetchEmp(empid in number,empname out varchar2,sal out number,job out varchar2) is
+begin
+select first_name,salary,job_id into empname,sal,job from employees where employee_id=empid;
+end;
+
+to call the procedure,
+declare
+v_name employees.first_name%type;
+v_salary employees.salary%type;
+v_job employees.job_id%type;
+v_empid employees.employee_id%type:=&v_empid;
+begin
+fetchEmp(v_empid,v_name,v_salary,v_job);
+dbms_output.put_line('Name '|| v_name);
+dbms_output.put_line('Salary '|| v_salary);
+dbms_output.put_line('Job '|| v_job);
+end;
+
+
+-- in/out parameter
+
+create or replace procedure proc1(mesg in out varchar2) is
+begin
+mesg := mesg || ' an IN OUT Parameter';
+END ;
+
+DECLARE
+ s VARCHAR2(50) := 'This procedure uses'; 
+BEGIN
+  proc1(s);
+  dbms_output.put_line(s);
+END;

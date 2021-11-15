@@ -1,0 +1,70 @@
+create or replace function func1 return varchar2 is
+begin
+return 'Hello ';
+end;
+
+select func1 from dual;
+  (or)
+declare
+s varchar2(30);
+begin
+s:=func1;
+dbms_output.put_line(s);
+end;
+
+create or replace function func2(s varchar2) return varchar2 as
+begin
+return s;
+end;
+
+select func2('hello') from dual;
+
+
+sql>variable s varchar2(50)
+sql>execute :s :=func2('hello');
+sql>print s
+
+declare
+s varchar2(20);
+begin
+s:=func2('hello');
+dbms_output.put_line(s);
+end;
+
+CREATE OR REPLACE FUNCTION check_sal(
+empid in  employees.employee_id%TYPE)  
+RETURN Boolean IS
+ v_dept_id employees.department_id%TYPE;
+ v_salary     employees.salary%TYPE;
+ v_avgsal employees.salary%TYPE;
+BEGIN
+ SELECT salary,department_id INTO v_salary,v_dept_id FROM employees WHERE employee_id=empid;
+ SELECT avg(salary) INTO v_avgsal FROM employees 
+ WHERE department_id=v_dept_id;
+ IF v_salary > v_avgsal THEN
+  RETURN TRUE;
+ ELSE
+  RETURN FALSE;  
+ END IF;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+   RETURN NULL;
+END;
+
+
+
+
+declare
+ eid employees.employee_id%TYPE:=&eid;
+--res boolean;
+BEGIN
+--res:=check_sal(eid);
+--if(res is null) then
+ IF (check_sal(eid) IS NULL) THEN
+ DBMS_OUTPUT.PUT_LINE('Employee ID does not exist');
+ ELSIF (check_sal(eid)) THEN  
+ DBMS_OUTPUT.PUT_LINE('Salary > average');
+ ELSE
+ DBMS_OUTPUT.PUT_LINE('Salary < average');
+ END IF;
+END;
